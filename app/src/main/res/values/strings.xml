@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">EaterActive_Courier</string>
+    <string name="app_title">EaterActive</string>
+    <string name="view_restaurants">View Restaurants</string>
+    <string name="welcome_text">Welcome to EaterActive! To get started ordering delicious foods from all of your local restaurants, please Login or Sign Up.</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="username_prompt">Username:</string>
+    <string name="password_prompt">Password:</string>
+    <string name="password_hint">P4ssw0rd0fY0urCh01C3</string>
+    <string name="username_hint">Your User Name</string>
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="username_key">username</string>
+    <string name="password_key">password</string>
+    <string name="sample_menu_item_name">Pastrama de oaie pe ceapa</string>
+    <string name="sample_menu_item_price">42.56 RON</string>
+    <string name="sample_restaurant_name">La Cocosu\' Rosu</string>
+    <string name="price_string">%.2f RON</string>
+    <string name="item_count_string">%d Items</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cart">Cart</string>
+    <string name="checkout">Checkout</string>
+    <string name="orders">Orders</string>
+    <string name="sample_item_count">69 Items</string>
+    <string name="confirm_pickup">Confirm Pickup</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="sample_address">Romania, Bucharest, Sector 6, Bvd. Iuliu Maniu 6D, Postcode 061344</string>
+    <string name="confirm_delivery">Confirm Delivery</string>
+</resources>
