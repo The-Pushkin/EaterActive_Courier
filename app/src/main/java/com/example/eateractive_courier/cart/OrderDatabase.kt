@@ -11,7 +11,7 @@ import com.example.eateractive_courier.cart.entity.OrderItemEntity
     entities = [
         OrderItemEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class OrderDatabase : RoomDatabase() {

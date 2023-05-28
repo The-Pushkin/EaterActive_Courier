@@ -18,17 +18,17 @@ interface ServerApi {
         @Path("order_id") orderId: Int
     ): Response<List<OrderItemModel>>
 
+    @GET("restaurants/address/{order_id}")
+    suspend fun getRestaurantAddress(
+        @Path("order_id") orderId: Int
+    ): Response<RestaurantAddressModel>
+
     @POST("orders/confirm_pickup/{order_id}")
     suspend fun confirmPickup(
         @Path("order_id") orderId: Int
     ): Response<Void>
 
-    @GET("restaurants/address/{restaurant_id}")
-    suspend fun getRestaurantAddress(
-        @Path("restaurant_id") restaurantId: Int
-    ): Response<RestaurantAddressModel>
-
-    @GET("restaurants/orders/address/{order_id}")
+    @GET("orders/address/{order_id}")
     suspend fun getDeliveryAddress(
         @Path("order_id") orderId: Int
     ): Response<DeliveryAddressModel>

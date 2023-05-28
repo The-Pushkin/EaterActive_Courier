@@ -48,12 +48,12 @@ class OrderDetailsFragment : Fragment() {
         binding.menuItemList.layoutManager = LinearLayoutManager(context)
 
         serverApi = ServerViewModel.getInstance().create(ServerApi::class.java)
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.Main) {
             val address = serverApi.getRestaurantAddress(orderId).body()?.address ?: "idk"
             binding.restaurantAddress.text = address
 
             val items = serverApi.getOrderItems(orderId).body()
-                ?.map { OrderItemModel.OrderItem(it.id, it.name) }
+                ?.map { OrderItemModel.OrderItem(it.name) }
 
             adapter.submitList(items)
         }
