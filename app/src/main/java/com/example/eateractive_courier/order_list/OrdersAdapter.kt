@@ -16,7 +16,7 @@ import com.example.eateractive_courier.order_details.OrderDetailsFragment
 class OrdersAdapter(private val onClickCallback: (Bundle) -> Unit) :
     ListAdapter<OrdersModel, RestaurantsAdapterViewHolder>(RestaurantModelCallback) {
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
-        is OrdersModel.Orders -> RestaurantsAdapterViewHolder.RESTAURANT_ITEM
+        is OrdersModel.Order -> RestaurantsAdapterViewHolder.RESTAURANT_ITEM
         is OrdersModel.Divider -> RestaurantsAdapterViewHolder.DIVIDER_ITEM
     }
 
@@ -57,7 +57,7 @@ sealed class RestaurantsAdapterViewHolder(itemView: View) : RecyclerView.ViewHol
         private val onClickCallback: (Bundle) -> Unit
     ) : RestaurantsAdapterViewHolder(binding.root) {
         override fun bind(item: OrdersModel) {
-            val orderItem = item as? OrdersModel.Orders ?: return
+            val orderItem = item as? OrdersModel.Order ?: return
             with(binding) {
                 restaurantName.text = orderItem.name
                 itemCount.text = itemView.context.getString(
@@ -67,7 +67,8 @@ sealed class RestaurantsAdapterViewHolder(itemView: View) : RecyclerView.ViewHol
                 root.setOnClickListener {
                     onClickCallback(
                         bundleOf(
-                            OrderDetailsFragment.KEY_ARG_RESTAURANT_NAME to orderItem.name
+                            OrderDetailsFragment.KEY_ARG_RESTAURANT_NAME to orderItem.name,
+                            OrderDetailsFragment.KEY_ARG_ORDER_ID to orderItem.id
                         )
                     )
                 }
@@ -82,7 +83,7 @@ sealed class RestaurantsAdapterViewHolder(itemView: View) : RecyclerView.ViewHol
     }
 
     companion object {
-        /** ViewType of [OrdersModel.Orders]. */
+        /** ViewType of [OrdersModel.Order]. */
         const val RESTAURANT_ITEM = 1
 
         /** ViewType of [OrdersModel.Divider]. */
@@ -93,9 +94,11 @@ sealed class RestaurantsAdapterViewHolder(itemView: View) : RecyclerView.ViewHol
 object RestaurantModelCallback : DiffUtil.ItemCallback<OrdersModel>() {
     override fun areItemsTheSame(oldItem: OrdersModel, newItem: OrdersModel): Boolean =
         when (oldItem) {
-            is OrdersModel.Orders -> {
-                newItem is OrdersModel.Orders &&
-                        newItem.name == oldItem.name
+            is OrdersModel.Order -> {
+                newItem is OrdersModel.Order &&
+                        newItem.id == oldItem.id &&
+                        newItem.name == oldItem.name &&
+                        newItem.itemCount == oldItem.itemCount
             }
             is OrdersModel.Divider -> {
                 newItem is OrdersModel.Divider

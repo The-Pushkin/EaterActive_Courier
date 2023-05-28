@@ -7,8 +7,8 @@ sealed interface OrderItemModel {
         val orderItemEntity: OrderItemEntity
     ) : OrderItemModel {
         companion object {
-            operator fun invoke(name: String): OrderItem =
-                OrderItem(OrderItemEntity(0, name))
+            operator fun invoke(serverId: Int, name: String): OrderItem =
+                OrderItem(OrderItemEntity(0, serverId, name))
         }
     }
 

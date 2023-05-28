@@ -4,22 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eateractive_courier.R
-import com.example.eateractive_courier.cart.OrderViewModel
-import com.example.eateractive_courier.cart.OrderViewModelFactory
-import com.example.eateractive_courier.cart.cartDatabase
 import com.example.eateractive_courier.databinding.FragmentOrderDetailsBinding
+import com.example.eateractive_courier.delivery.DeliveryFragment
+import com.example.eateractive_courier.server.ServerApi
+import com.example.eateractive_courier.server.ServerViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class OrderDetailsFragment : Fragment() {
     private var _binding: FragmentOrderDetailsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var serverApi: ServerApi
+    private lateinit var adapter: OrderItemListAdapter
 
-    private val viewModel: OrderViewModel by viewModels {
-        OrderViewModelFactory(cartDatabase(requireActivity().applicationContext))
+    private val viewModel: OrderDetailsViewModel by viewModels {
+        OrderDetailsViewModelFactory(
+            ServerViewModel.getInstance().create(ServerApi::class.java),
+            requireArguments().getInt(KEY_ARG_ORDER_ID)
+        )
     }
 
     override fun onCreateView(
@@ -28,37 +37,34 @@ class OrderDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentOrderDetailsBinding.inflate(inflater, container, false)
 
-        val items: MutableList<OrderItemModel> = mutableListOf(
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Pastrama de oaie pe ceapa"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Caramel Latte"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Piept de pui umplut cu cascaval, verdeata si usturoi"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Frigarui de creveti gatiti in unt"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Sarmale cu mamaliguta"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Alegatura de porc la garnita cu ou"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Choice Grade Ribeye Steak"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Pranzul Haiducului"),
-            OrderItemModel.Divider,
-            OrderItemModel.OrderItem("Mici Cu Bere"),
-            OrderItemModel.Divider,
-        )
+        val restaurantName = requireArguments().getString(KEY_ARG_RESTAURANT_NAME)
+        val orderId = requireArguments().getInt(KEY_ARG_ORDER_ID)
 
-        binding.title.text = requireArguments().getString(KEY_ARG_RESTAURANT_NAME)
+        binding.title.text = restaurantName
 
-        val adapter = OrderItemListAdapter { }
-        adapter.submitList(items)
+        adapter = OrderItemListAdapter { }
+        adapter.submitList(emptyList())
         binding.menuItemList.adapter = adapter
         binding.menuItemList.layoutManager = LinearLayoutManager(context)
 
-        binding.checkoutButton.setOnClickListener {
-            findNavController().navigate(R.id.action_orderDetailsFragment_to_deliveryFragment)
+        serverApi = ServerViewModel.getInstance().create(ServerApi::class.java)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val address = serverApi.getRestaurantAddress(orderId).body()?.address ?: "idk"
+            binding.restaurantAddress.text = address
+
+            val items = serverApi.getOrderItems(orderId).body()
+                ?.map { OrderItemModel.OrderItem(it.id, it.name) }
+
+            adapter.submitList(items)
+        }
+
+        binding.confirmPickupButton.setOnClickListener {
+            viewModel.confirmPickup()
+
+            findNavController().navigate(
+                R.id.action_orderDetailsFragment_to_deliveryFragment,
+                bundleOf(DeliveryFragment.KEY_ARG_ORDER_ID to orderId)
+            )
         }
 
         return binding.root
@@ -66,5 +72,6 @@ class OrderDetailsFragment : Fragment() {
 
     companion object {
         const val KEY_ARG_RESTAURANT_NAME = "restaurantName"
+        const val KEY_ARG_ORDER_ID = "orderId"
     }
 }

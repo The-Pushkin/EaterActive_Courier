@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/deliveryFragment"
-        android:name="com.example.eateractive_courier.order_details.DeliveryFragment"
+        android:name="com.example.eateractive_courier.delivery.DeliveryFragment"
         android:label="fragment_delivery"
         tools:layout="@layout/fragment_delivery" />
 </navigation>

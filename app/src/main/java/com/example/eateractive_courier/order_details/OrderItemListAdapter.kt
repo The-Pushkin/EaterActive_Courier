@@ -84,6 +84,7 @@ object MenuItemModelCallback : DiffUtil.ItemCallback<OrderItemModel>() {
         when (oldItem) {
             is OrderItemModel.OrderItem -> {
                 newItem is OrderItemModel.OrderItem &&
+                        newItem.orderItemEntity.serverId == oldItem.orderItemEntity.serverId &&
                         newItem.orderItemEntity.name == oldItem.orderItemEntity.name
             }
             is OrderItemModel.Divider -> {
