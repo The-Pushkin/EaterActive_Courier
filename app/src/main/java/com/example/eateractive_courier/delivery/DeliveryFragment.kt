@@ -1,5 +1,6 @@
 package com.example.eateractive_courier.delivery
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,10 @@ class DeliveryFragment : Fragment() {
 
     private val viewModel: DeliveryViewModel by viewModels {
         DeliveryViewModelFactory(
-            ServerViewModel.getInstance().create(ServerApi::class.java),
+            ServerViewModel.getInstance(
+                activity?.getPreferences(Context.MODE_PRIVATE)
+                    ?.getString(getString(R.string.jwt_key), "qwerty")
+            ).create(ServerApi::class.java),
             requireArguments().getInt(KEY_ARG_ORDER_ID)
         )
     }

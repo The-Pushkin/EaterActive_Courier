@@ -1,5 +1,6 @@
 package com.example.eateractive_courier.order_details
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +27,10 @@ class OrderDetailsFragment : Fragment() {
 
     private val viewModel: OrderDetailsViewModel by viewModels {
         OrderDetailsViewModelFactory(
-            ServerViewModel.getInstance().create(ServerApi::class.java),
+            ServerViewModel.getInstance(
+                activity?.getPreferences(Context.MODE_PRIVATE)
+                    ?.getString(getString(R.string.jwt_key), "qwerty")
+            ).create(ServerApi::class.java),
             requireArguments().getInt(KEY_ARG_ORDER_ID)
         )
     }

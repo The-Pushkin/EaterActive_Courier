@@ -2,13 +2,17 @@ package com.example.eateractive_courier.server
 
 import com.example.eateractive_courier.server.models.*
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ServerApi {
-    @GET("test")
-    suspend fun getTest(): Response<TestModel>
+    @POST("courier/signup")
+    suspend fun signup(@Body signupModel: SignupModel): Response<JwtModel>
+
+    @POST("courier/login")
+    suspend fun login(@Body loginModel: LoginModel): Response<JwtModel>
 
     @GET("orders")
     suspend fun getOrders(): Response<List<OrderModel>>
