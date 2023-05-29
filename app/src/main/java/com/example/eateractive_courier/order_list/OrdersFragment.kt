@@ -35,6 +35,18 @@ class OrdersFragment : Fragment() {
     ): View {
         _binding = FragmentOrdersBinding.inflate(inflater, container, false)
 
+        binding.logoutButton.setOnClickListener {
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+            if (sharedPref != null) {
+                with(sharedPref.edit()) {
+                    clear()
+                    apply()
+                }
+            }
+
+            findNavController().popBackStack(R.id.mainFragment, false)
+        }
+
         adapter = OrdersAdapter { bundle ->
             findNavController().navigate(
                 R.id.action_ordersFragment_to_orderDetailsFragment,

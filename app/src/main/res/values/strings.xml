@@ -29,4 +29,5 @@
     <string name="confirm_delivery">Confirm Delivery</string>
     <string name="nicaieri_sau_undeva">Nicaieri Sau Undeva</string>
     <string name="login">Log In</string>
+    <string name="logout">Logout</string>
 </resources>
